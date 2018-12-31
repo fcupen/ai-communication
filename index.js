@@ -29,8 +29,6 @@ sio.on('connection', onConnect);
 // CALLBACK LOCAL SERVER
   function onConnect(socket){
     console.log('SERVER CLIENT CONNECTED');
-    // EMITIR MENSAJE
-  // socket.emit('message2', 'msg');
 
 // RECIBIR MENSAJES
     socket.on('message', function(msg){
@@ -43,21 +41,11 @@ sio.on('connection', onConnect);
     console.log('user disconnected');
   });
 
-  // RECIBIR MENSAJES DEL SERVIDOR
-  master_server.on('chatmessage', function(msg){
-    // EMITIR MENSAJE LOCAL
-  // socket.emit('chatmessage', msg);
-  });
-
-  // master_server.emit("message","Commando: ESTO");
 }
-
-setTimeout(function(){
-  retorno('msg').subscribe(function(msj){
+retorno('msg').subscribe(function(msj){
   console.log('asf' + msj);
-  });
+});
 
-},2000);
 function retorno(msg) {
 
   const observable = new rxjs.Observable((observer) => {
@@ -69,7 +57,6 @@ function retorno(msg) {
       });
   });
 
-  // numberObservable.subscribe(value => console.log(value));
 return observable;
   };
 /**
