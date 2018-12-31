@@ -1,9 +1,10 @@
 'use strict';
-
 const app = require('express')();
 const http = require('http').Server(app);
 const sio = require('socket.io')(http);
 const master_server = require("socket.io-client")('http://localhost:8100'); // This is a client connecting to the SERVER 2
+
+const rxjs = require('rxjs');
 
 // URL ESTANDART
 app.get('/', function(req, res){
@@ -45,17 +46,31 @@ sio.on('connection', onConnect);
   // RECIBIR MENSAJES DEL SERVIDOR
   master_server.on('chatmessage', function(msg){
     // EMITIR MENSAJE LOCAL
-  socket.emit('chatmessage', msg);
+  // socket.emit('chatmessage', msg);
   });
 
   // master_server.emit("message","Commando: ESTO");
 }
 
 setTimeout(function(){
-  retorno('msg');
+  retorno('msg').subscribe(function(msj){
+  console.log('asf' + msj);
+  });
+
 },2000);
 function retorno(msg) {
-  sio.emit('chatmessage', msg);
+
+  const observable = new rxjs.Observable((observer) => {
+      // RECIBIR MENSAJES DEL SERVIDOR
+      master_server.on('chatmessage', function(msg){
+        // EMITIR MENSAJE LOCAL
+        sio.emit('chatmessage', msg);
+        observer.next(msg);
+      });
+  });
+
+  // numberObservable.subscribe(value => console.log(value));
+return observable;
   };
 /**
  * Adds commas to a number
