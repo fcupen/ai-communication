@@ -1,0 +1,14 @@
+{
+  "name": "ai-communication",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --reporter spec"
+  },
+  "engines": {
+  "node": ">=4.2.4"
+}
+  "author": "Cupen Systems <cupensystems@gmail.com> (https://www.cupensystems.com)",
+  "license": "MIT"
+}
