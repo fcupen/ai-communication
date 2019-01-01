@@ -6,22 +6,13 @@ const master_server = require("socket.io-client")('http://localhost:8100'); // T
 
 const rxjs = require('rxjs');
 
-// URL ESTANDART
-app.get('/', function(req, res){
-  res.sendFile(__dirname + '/index.html');
-});
-
-// CREAR HTTP
- http.listen(1918, function(){
-   console.log('listening on *:3001');
- });
-
 // SERVER 2
 
 // CONECTAR CON SERVER
 master_server.on("connect",function(){
 console.log("MASTER SERVER Connected!");
 });
+
 
 // LOCAL SERVER
 sio.on('connection', onConnect);
@@ -45,29 +36,32 @@ sio.on('connection', onConnect);
 retorno('msg').subscribe(function(msj){
   console.log('asf' + msj);
 });
+enviar('msh');
 
+/**
+ * Envia un mensaje para analizar
+ * @param {string} msg
+ * @return {string}
+ */
+function enviar(msg) {
+  master_server.emit("message", msg);
+}
+
+/**
+ * Recibe la informacion analizada
+ * @param {string} msg
+ * @return {string}
+ */
 function retorno(msg) {
-
   const observable = new rxjs.Observable((observer) => {
       // RECIBIR MENSAJES DEL SERVIDOR
       master_server.on('chatmessage', function(msg){
-        // EMITIR MENSAJE LOCAL
-        sio.emit('chatmessage', msg);
         observer.next(msg);
       });
   });
 
-return observable;
+  return observable;
   };
-/**
- * Adds commas to a number
- * @param {number} number
- * @param {string} locale
- * @return {string}
- */
- function numeros(number, locale) {
-     return number.toLocaleString(locale);
- };
-
-module.exports.numero = numeros;
-module.exports.string = 'numero';
+console.log('test');
+module.exports.retorno = retorno;
+module.exports.enviar = enviar;
