@@ -37,86 +37,85 @@
 // module.exports.sio = sio;
 // module.exports.string = 'numero';
 
-let apikeys = {apikey: 0};
+let apikeys = { apikey: 0 };
 let secret = ['secret'];
 const CryptoJS = require('crypto-js');
-var jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 
 let tokens = {};
 
-var SECRET = "SECRETO_PARA_ENCRIPTACION"
-
 
 // encriptar mensaje de regreso
-  function encrypt(data) {
-    // console.log(data);
-    // buscar api secret en la lista de api secrets por el token
-    const secret = tokens[data.token];
-    if(secret !== undefined){
-      // encriptar por el apisecret
+function encrypt(data) {
+  // buscar api secret en la lista de api secrets por el token
+  const secret = tokens[data.token];
+  if (secret !== undefined) {
+    // encriptar por el apisecret
     var ciphertext = CryptoJS.AES.encrypt(JSON.stringify(data.msg), secret);
-// console.log('ciphertext', ciphertext.toString());
+    // console.log('ciphertext', ciphertext.toString());
     return ciphertext.toString();
-  }else{
-      return null;
-    }
+  } else {
+    return null;
   }
-  function desencrypt(data) {
-    var bytes = CryptoJS.AES.decrypt(data.toString(), 'U2FsdGVkX1ozdNsHPWepfXM1pj8lYkltIUKJrNSew');
-    var decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-    return decryptedData;
-  }
+}
+
+var allClients = [];
 
 // Server 1
 var io = require("socket.io").listen(8100);
-io.sockets.on("connection",function(socket){
-    console.log("Server Connected!");
-    // console.log(socket);
+io.sockets.on("connection", function (socket) {
+  allClients.push(socket);
+  // console.log(allClients);
+  console.log("Server Connected!");
+  // console.log(socket);
+  var address = socket.handshake;
 
-    var username = 'req.body.username';
-    var user = {
-      'username': username,
-      'role': 'admin'
-    } ;
-    var token = jwt.sign(user, SECRET, { expiresIn: 300 });
-    socket.emit('getToken', token);
-    // socket.broadcast.emit('getToken', token);
+  var user = {
+    'time': address.time.toString().replace(/\s/g, '').replace(/[^a-zA-Z0-9]/g, ''),
+    'connection': address.headers['user-agent'].replace(/\s/g, '').replace(/[^a-zA-Z0-9]/g, '')
+  };
+  var SECRET = 'alfsj23ljdf9gj23alfsj23ljdf9gj23JSDLljfdljsd923F';
+  var token = jwt.sign(user, SECRET, { expiresIn: 300 });
+  socket.emit('getToken', token);
+  // socket.broadcast.emit('getToken', token);
 
-    socket.on("token_apikey",function(data){
-      // comprobar si el api key existe y cotejarlo con el token
-      let apiSecret = secret[apikeys[data.apikey]]
-      let token = apiSecret ? data.token : undefined;
-      // si el token concuerda con el apisecret continuar
-      if(token !== undefined){
-        //guardar el token cotejado con el apisecret
-        tokens[token] = apiSecret;
-      }
-});
+  socket.on("token_apikey", function (data) {
+    // comprobar si el api key existe y cotejarlo con el token
+    let apiSecret = secret[apikeys[data.apikey]]
+    let token = apiSecret ? data.token : undefined;
+    // si el token concuerda con el apisecret continuar
+    if (token !== undefined) {
+      //guardar el token cotejado con el apisecret
+      tokens[token] = apiSecret;
+    }
+  });
 
-// recibir mensajes
-    socket.on("message",function(data){
-//-- procesar informacion
-let respuesta = undefined;
-procesar(data).then(function(res){
-  respuesta = res;
+  // recibir mensajes
+  socket.on("message", function (data) {
+    //-- procesar informacion
+    let respuesta = undefined;
+    procesar(data).then(function (res) {
+      respuesta = res;
       //--
       // encriptar mensaje de respuesta
-const encrypts = encrypt(respuesta);
-// si el encriptado va bien sera diferente de null
-if(encrypts !== null){
-  // enviar mensaje de regreso
-socket.emit('receive_message', encrypts);
+      const encrypts = encrypt(respuesta);
+      // si el encriptado va bien sera diferente de null
+      if (encrypts !== null) {
+        // enviar mensaje de regreso
+        socket.emit('receive_message', encrypts);
         // socket.broadcast.emit('receive_message', encrypts);
-}
-});
-   });
+      }
+    });
+  });
+
+    socket.on('disconnect', function(data){
+        var i = allClients.indexOf(socket);
+      allClients.splice(i, 1);
+    });
 });
 
 
 async function procesar(data) {
   data.msg = 'data :' + data.msg;
-return await data;
-  }
-
-  // var refreshToken = randtoken.uid(256)
-  // refreshTokens[refreshToken] = username res.json({token: 'JWT ' + token, refreshToken: refreshToken})
+  return await data;
+}
