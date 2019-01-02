@@ -1,6 +1,6 @@
 {
   "name": "ai-communication",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "connections with AI of Cupen Systems, C.A",
   "main": "index.js",
   "scripts": {
