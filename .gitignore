@@ -64,8 +64,8 @@ typings/
 package-lock.json
 
 # files
-serve.json
-server.json
+serve.js
+server.js
 test
 assets
 index.html

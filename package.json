@@ -1,6 +1,6 @@
 {
   "name": "ai-communication",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "connections with AI of Cupen Systems, C.A",
   "main": "index.js",
   "scripts": {
@@ -12,12 +12,8 @@
   "author": "Cupen Systems <cupensystems@gmail.com> (https://www.cupensystems.com)",
   "license": "MIT",
   "dependencies": {
-    "body-parser": "^1.18.3",
     "crypto-js": "^3.1.9-1",
-    "express": "^4.15.2",
-    "jsonwebtoken": "^8.4.0",
     "rxjs": "^6.3.3",
-    "socket.io": "^2.2.0",
     "socket.io-client": "^2.2.0"
   }
 }
