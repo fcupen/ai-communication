@@ -1,4 +1,4 @@
-# ai-communication
+# AI-Communication BETA
 
 This is a library to connect AI of Cupen Systems with any framework.
 
@@ -13,7 +13,3 @@ This is a library to connect AI of Cupen Systems with any framework.
   `npm test`
 
 ## Contributing
-
-In lieu of a formal style guide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code.
-=======
-# ai-communication

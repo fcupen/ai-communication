@@ -1,42 +1,20 @@
 'use strict';
-const app = require('express')();
-const http = require('http').Server(app);
-const sio = require('socket.io')(http);
 const master_server = require("socket.io-client")('http://localhost:8100'); // This is a client connecting to the SERVER 2
-
 const rxjs = require('rxjs');
 
-// SERVER 2
+// SERVER
 
-// CONECTAR CON SERVER
-master_server.on("connect",function(){
-console.log("MASTER SERVER Connected!");
-});
-
-
-// LOCAL SERVER
-sio.on('connection', onConnect);
-
-// CALLBACK LOCAL SERVER
-  function onConnect(socket){
-    console.log('SERVER CLIENT CONNECTED');
-
-// RECIBIR MENSAJES
-    socket.on('message', function(msg){
-      // EMITIR MENSAJE AL SERVIDOR
-    master_server.emit("message", msg);
+function conectar() {
+  const observable = new rxjs.Observable((observer) => {
+    master_server.on("connect", function () {
+      // console.log("MASTER SERVER Connected!");
+      const estado = 'Conectado!';
+      observer.next(estado);
+    });
   });
 
-  // VER SI SE DESCONECTA
-  socket.on('disconnect', function(){
-    console.log('user disconnected');
-  });
-
+  return observable;
 }
-retorno('msg').subscribe(function(msj){
-  console.log('asf' + msj);
-});
-enviar('msh');
 
 /**
  * Envia un mensaje para analizar
@@ -52,16 +30,17 @@ function enviar(msg) {
  * @param {string} msg
  * @return {string}
  */
-function retorno(msg) {
+function retorno() {
   const observable = new rxjs.Observable((observer) => {
-      // RECIBIR MENSAJES DEL SERVIDOR
-      master_server.on('chatmessage', function(msg){
-        observer.next(msg);
-      });
+    // RECIBIR MENSAJES DEL SERVIDOR
+    master_server.on('chatmessage', function (msg) {
+      observer.next(msg);
+    });
   });
 
   return observable;
-  };
-console.log('test');
+};
+
+module.exports.conectar = conectar;
 module.exports.retorno = retorno;
 module.exports.enviar = enviar;

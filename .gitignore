@@ -62,3 +62,10 @@ typings/
 
 # lock
 package-lock.json
+
+# files
+serve.json
+server.json
+test
+assets
+index.html
