@@ -2,9 +2,10 @@
   "name": "ai-communication",
   "version": "0.0.4",
   "description": "connections with AI of Cupen Systems, C.A",
-  "main": "index.js",
+  "main": "dist/index-min.js",
   "scripts": {
-    "test": "mocha --reporter spec"
+    "uglify": "gulp compress",
+    "start":"node dist/index-min.js"
   },
   "engines": {
     "node": ">=4.2.4"
@@ -15,5 +16,9 @@
     "crypto-js": "^3.1.9-1",
     "rxjs": "^6.3.3",
     "socket.io-client": "^2.2.0"
+  },
+  "devDependencies": {
+    "gulp": "^4.0.0",
+    "gulp-minify": "^3.1.0"
   }
 }

@@ -69,3 +69,5 @@ server.js
 test
 assets
 index.html
+./index.js
+./gulpfile.js
