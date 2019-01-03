@@ -1,10 +1,10 @@
 {
   "name": "ai-communication",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "connections with AI of Cupen Systems, C.A",
   "main": "dist/index-min.js",
   "scripts": {
-    "uglify": "gulp compress",
+    "uglify": "rimraf dist && gulp compress",
     "start":"node dist/index-min.js"
   },
   "engines": {

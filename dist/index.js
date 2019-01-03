@@ -4,15 +4,6 @@ const rxjs = require('rxjs');
 const CryptoJS = require('crypto-js');
 let apis = {};
 
-const minify = require('gulp-minify');
-const gulp = require('gulp');
-
-gulp.task('compress', function() {
-  gulp.src(['./*.js', './*.mjs'])
-    .pipe(minify())
-    .pipe(gulp.dest('dist'))
-});
-
 function desencrypt(data) {
   const bytes = CryptoJS.AES.decrypt(data.toString(), apis.secret);
   const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
